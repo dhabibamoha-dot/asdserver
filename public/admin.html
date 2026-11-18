@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<title>لوحة التحكم — Nightmare Controller</title>
+<link rel="stylesheet" href="admin.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%233ddcbf'/%3E%3Ctext x='16' y='23' font-size='19' font-weight='900' text-anchor='middle' fill='%2304140f' font-family='Segoe UI'%3EN%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+
+<!-- ═══════════ login ═══════════ -->
+<div id="loginScreen" class="screen login-screen">
+  <form id="loginForm" class="login-card">
+    <div class="login-logo">N</div>
+    <h1>Nightmare <span>Controller</span></h1>
+    <p class="login-sub">لوحة تحكم السيرفر — الأكواد والتحديثات والسجل</p>
+    <label class="field">اسم المستخدم
+      <input id="u" autocomplete="username" required placeholder="admin" />
+    </label>
+    <label class="field">كلمة المرور
+      <input id="p" type="password" autocomplete="current-password" required placeholder="••••••••" />
+    </label>
+    <button type="submit" class="btn primary block">دخول</button>
+    <div id="loginErr" class="err"></div>
+    <div class="login-foot">محمي بتوكن HMAC — الجلسة صالحة 8 ساعات</div>
+  </form>
+</div>
+
+<!-- ═══════════ dashboard ═══════════ -->
+<div id="dash" class="screen dash hidden">
+  <aside class="side">
+    <div class="brand">
+      <span class="brand-mark">N</span>
+      <div class="brand-text"><b>Nightmare</b><small>controller admin</small></div>
+    </div>
+    <nav class="nav">
+      <button class="navBtn active" data-tab="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="3" width="7" height="9" rx="1.6"/><rect x="14" y="3" width="7" height="5" rx="1.6"/><rect x="14" y="12" width="7" height="9" rx="1.6"/><rect x="3" y="16" width="7" height="5" rx="1.6"/></svg>
+        <span>لوحة التحكم</span>
+      </button>
+      <button class="navBtn" data-tab="codes">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="7" width="18" height="10" rx="2.4"/><path d="M7 12h.01M11 12h2"/></svg>
+        <span>الأكواد</span><em id="navCodesCount"></em>
+      </button>
+      <button class="navBtn" data-tab="update">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 19V5M6 11l6-6 6 6"/><path d="M4 21h16"/></svg>
+        <span>التحديثات</span><em id="navUpdateDot" class="dot hidden"></em>
+      </button>
+      <button class="navBtn" data-tab="logs">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 19V5a2 2 0 0 1 2-2h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 13h8M8 17h5"/></svg>
+        <span>السجل</span>
+      </button>
+      <button class="navBtn" data-tab="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>الإعدادات</span>
+      </button>
+    </nav>
+    <div class="side-foot">
+      <div class="whoami">
+        <span class="avatar" id="avatar">A</span>
+        <div><b id="whoami">admin</b><small id="srvVer">v4.0.0</small></div>
+      </div>
+      <button id="logoutBtn" class="btn ghost small">خروج</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1 id="pageTitle">لوحة التحكم</h1>
+        <p id="pageSub">نظرة سريعة على السيرفر والأكواد</p>
+      </div>
+      <div class="topbar-actions">
+        <span class="pill" id="healthPill"><i></i> متصل</span>
+        <button id="refreshBtn" class="btn ghost icon" title="تحديث">⟳</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <section id="tab-home" class="tab active"></section>
+      <section id="tab-codes" class="tab"></section>
+      <section id="tab-update" class="tab"></section>
+      <section id="tab-logs" class="tab"></section>
+      <section id="tab-settings" class="tab"></section>
+    </div>
+  </main>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toasts" class="toasts"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>
